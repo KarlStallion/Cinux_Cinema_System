@@ -1,9 +1,9 @@
 const Pool = require('pg').Pool;
 
 const pool = new Pool({
-    user: "postgres",
-    password: "postgres", // Enter your password here
-    database: "testWad", //Try to use the same name for your database
+    user: "karlparloja",
+    password: "parloja2003", // Enter your password here
+    database: "cinux", //Try to use the same name for your database
     host: "localhost",
     port: "5432"
 });
@@ -13,7 +13,7 @@ const execute = async(query1, query2, query3) => {
     try {
         await pool.connect(); // gets connection
         await pool.query(query1); // sends queries
-        await pool.query(query2); // sends queries
+        //await pool.query(query2); // sends queries
         return true;
     } catch (error) {
         console.error(error.stack);
@@ -78,9 +78,15 @@ const createTblQuery1 = `
     );
     
     -- After Showings table creation, now add the foreign key to Bookings table
-    ALTER TABLE Bookings ADD CONSTRAINT fk_showing
-      FOREIGN KEY (showing_id) 
-      REFERENCES Showings(showing_id);`;
+    DO $$ 
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints WHERE constraint_name = 'fk_showing') THEN
+            ALTER TABLE Bookings
+            ADD CONSTRAINT fk_showing
+            FOREIGN KEY (showing_id) 
+            REFERENCES Showings(showing_id);
+        END IF;
+    END $$;`;
 
 
 const insertDataQuery = `INSERT INTO Movies (movie_id, title, genre, release_date, director, description, poster_url)
