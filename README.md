@@ -1,5 +1,3 @@
-# wad2023-exam1-22-12-2023
-
 ## Project setup
 ```
 npm install
